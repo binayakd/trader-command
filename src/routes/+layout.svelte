@@ -16,12 +16,6 @@
         
     <nav class="terminal-menu">
       <ul vocab="https://schema.org/" typeof="BreadcrumbList">
-        <li>
-          <a href="/" class="menu-item">
-            <span>About</span>
-          </a>
-          <meta property="position">
-        </li>
         <li property="itemListElement" typeof="ListItem">
           <a href="https://github.com/binayakd" property="item" typeof="WebPage" class="menu-item" target="_blank" rel="noreferrer">
             <span property="name">Github</span></a><meta property="position" content="1">
