@@ -33,13 +33,8 @@
 
 <style>
     .screen {
-        height: calc(100vh - 91px);
-        /* width: 95vw;  */
-        border: 1px solid rgb(163, 171, 186, 0.5);
+        width: 95vw; 
         margin: 0 auto;
-        padding: calc(var(--global-space) * 2);
-        /* background-image: linear-gradient(to right, transparent 1px, #000 1px), linear-gradient(to bottom, transparent 1px, #000 1px); */
-        background-size: 20px 20px;
     }
 
     .screen-nav {
