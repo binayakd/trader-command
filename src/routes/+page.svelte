@@ -4,6 +4,9 @@
   import ContractsMain from "../components/contracts/ContractsMain.svelte";
   import StarmapMain from "../components/starmap/StarmapMain.svelte";
 
+  import { onMount, onDestroy } from 'svelte';
+  import { tick } from 'svelte/internal';
+
   const screenList = [
     { name: "Agents", component: AgentMain },
     { name: "Fleet", component: FleetMain },
@@ -12,6 +15,37 @@
   ];
 
   let selected = AgentMain;
+  let utcTime = '';
+
+  function updateUTCTime() {
+    const now = new Date();
+    const options = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+      timeZone: 'UTC'
+    };
+    utcTime = now.toLocaleString('en-US', options);
+  }
+
+  onMount(() => {
+    const interval = setInterval(() => {
+      tick(); // Trigger Svelte reactivity
+      updateUTCTime();
+    }, 1000); // Update every second
+
+    onDestroy(() => {
+      clearInterval(interval);
+    });
+
+    updateUTCTime(); // Initial update
+  });
+
+
 </script>
 
 <div class="screen">
@@ -30,7 +64,7 @@
         </div>
       {/each}
     </div>
-    <div class="utc-time">UTC time</div>
+    <div class="utc-time">{utcTime}</div>
 
   </div>
 
