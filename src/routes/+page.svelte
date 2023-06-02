@@ -4,8 +4,8 @@
   import ContractsMain from "../components/contracts/ContractsMain.svelte";
   import StarmapMain from "../components/starmap/StarmapMain.svelte";
 
-  import { onMount, onDestroy } from 'svelte';
-  import { tick } from 'svelte/internal';
+  import { onMount, onDestroy } from "svelte";
+  import { tick } from "svelte/internal";
 
   const screenList = [
     { name: "Agents", component: AgentMain },
@@ -15,36 +15,43 @@
   ];
 
   let selected = AgentMain;
-  let utcTime = '';
+  let utcTime = "";
+  let interval;
 
   function updateUTCTime() {
     const now = new Date();
     const options = {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
       hour12: false,
-      timeZone: 'UTC'
+      timeZone: "UTC",
     };
-    utcTime = now.toLocaleString('en-US', options);
+    const utcTimeArray = now.toLocaleString("en-US", options).split(", ");
+    const [date, time] = utcTimeArray;
+    const [month, day, year] = date.split("/");
+    utcTime = `${year}-${month}-${day} ${time}`;
+  }
+
+  updateUTCTime()
+
+  function startTimeDisplay() {
+    interval = setInterval(() => {
+      tick();
+      updateUTCTime();
+    }, 1000);
   }
 
   onMount(() => {
-    const interval = setInterval(() => {
-      tick(); // Trigger Svelte reactivity
-      updateUTCTime();
-    }, 1000); // Update every second
-
-    onDestroy(() => {
-      clearInterval(interval);
-    });
-
-    updateUTCTime(); // Initial update
+    startTimeDisplay();
   });
 
+  onDestroy(() => {
+    clearInterval(interval);
+  });
 
 </script>
 
@@ -64,15 +71,24 @@
         </div>
       {/each}
     </div>
-    <div class="utc-time">{utcTime}</div>
-
+    <div class="right-nav">
+      <div class="btn btn-primary btn-ghost">ACTIVEAGENT</div>
+      <div class="btn btn-primary btn-ghost">{utcTime} UTC</div>
+    </div>
   </div>
-
-
-  <svelte:component this={selected} />
+  <div class="main">
+    <svelte:component this={selected} />
+  </div>
 </div>
 
 <style>
+  .main {
+    height: calc(100vh - 150px);
+    flex: 1;
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid rgb(163, 171, 186, 0.5);
+  }
   .screen {
     width: 95vw;
     margin: 0 auto;
@@ -83,7 +99,7 @@
     display: flex;
   }
 
-  .utc-time {
+  .right-nav {
     align-self: flex-end;
   }
 
