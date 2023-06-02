@@ -31,6 +31,4 @@
   <main>
     <slot />
   </main>
-
-
 </div>
