@@ -90,7 +90,6 @@
     border: 1px solid rgb(163, 171, 186, 0.5);
   }
   .screen {
-    width: 95vw;
     margin: 0 auto;
   }
 
