@@ -3,7 +3,6 @@ const rootUrl = "https://api.spacetraders.io/v2"
 
 
 async function callEndpoint(urlPath, method, requestBody=null, authToken=null) {
-
   const body = requestBody ? JSON.stringify(requestBody) : null
   const headers = {'Content-Type': 'application/json'}
 
@@ -38,10 +37,7 @@ async function callEndpoint(urlPath, method, requestBody=null, authToken=null) {
       error: error.message
     }
   }
-
-
 }
-
 
 export async function registerNewAgent(symbol, faction, email=null) {
 

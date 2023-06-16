@@ -42,3 +42,7 @@
 .sub-section:last-child {
   margin-right: 0;
 }
+
+.section-internal{
+  overflow-y: scroll;
+}

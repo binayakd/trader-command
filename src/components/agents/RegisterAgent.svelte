@@ -1,16 +1,17 @@
 <script>
-  import { getFactions } from "$lib/client";
-  import { onMount } from "svelte";
-  import AgentList from "./AgentList.svelte";
+  import { getFactions } from "$lib/client"
+  import { onMount } from "svelte"
+  import AgentList from "./AgentList.svelte"
+  import { saveAgentDetails } from '$lib/store'
 
-  let factionInfo;
-  let selectedFaction;
-  // export let form
+  let factionInfo
+  let selectedFaction
+  let msg
+  let errorMsg
 
   onMount(async () => {
     const resp = await getFactions();
     factionInfo = resp.content.data;
-    console.log(factionInfo);
     selectedFaction = factionInfo[0];
   });
 
@@ -18,8 +19,8 @@
     const data = {};
     const formData = new FormData(this);
     formData.forEach((value, key) => (data[key] = value));
-    console.log(selectedFaction);
-    console.log(data);
+    // TODO: make actual call to register
+    msg = saveAgentDetails(data['symbol'], "testtoken")
   }
 </script>
 
@@ -27,7 +28,7 @@
 
 <div class="sub-section terminal-card">
   <header>Register</header>
-  <div>
+  <div class="section-internal">
     <form method="POST" on:submit|preventDefault={handleSubmit}>
       <!-- <form method="POST" action="#"> -->
       <fieldset>
@@ -66,11 +67,16 @@
         </div>
       </fieldset>
     </form>
+    {#if msg}
+    <div class="terminal-alert terminal-alert-primary">
+      {msg}
+    </div>
+    {/if}
   </div>
 </div>
 <div class="sub-section terminal-card">
   <header>Faction Details</header>
-  <div>
+  <div class="section-internal">
     {#if selectedFaction}
       <h3>
         {selectedFaction.name}

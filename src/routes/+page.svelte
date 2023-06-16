@@ -1,11 +1,12 @@
 <script>
-  import AgentMain from "../components/agents/AgentMain.svelte";
-  import FleetMain from "../components/fleet/FleetMain.svelte";
-  import ContractsMain from "../components/contracts/ContractsMain.svelte";
-  import StarmapMain from "../components/starmap/StarmapMain.svelte";
+  import AgentMain from "../components/agents/AgentMain.svelte"
+  import FleetMain from "../components/fleet/FleetMain.svelte"
+  import ContractsMain from "../components/contracts/ContractsMain.svelte"
+  import StarmapMain from "../components/starmap/StarmapMain.svelte"
 
-  import { onMount, onDestroy } from "svelte";
-  import { tick } from "svelte/internal";
+  import { onMount, onDestroy } from "svelte"
+  import { tick } from "svelte/internal"
+  import { getSelectedAgent } from "$lib/store"
 
   const screenList = [
     { name: "Agents", component: AgentMain },
@@ -14,9 +15,10 @@
     { name: "Starmap", component: StarmapMain },
   ];
 
-  let selected = AgentMain;
-  let utcTime = "";
-  let interval;
+  let selected = AgentMain
+  let utcTime = ""
+  let interval
+  let selectedAgent
 
   function updateUTCTime() {
     const now = new Date();
@@ -32,8 +34,8 @@
     };
     const utcTimeArray = now.toLocaleString("en-US", options).split(", ");
     const [date, time] = utcTimeArray;
-    const [month, day, year] = date.split("/");
-    utcTime = `${year}-${month}-${day} ${time}`;
+    const [month, day, year] = date.split("/")
+    utcTime = `${year}-${month}-${day} ${time}`
   }
 
   updateUTCTime()
@@ -46,11 +48,12 @@
   }
 
   onMount(() => {
-    startTimeDisplay();
+    startTimeDisplay()
+    selectedAgent = getSelectedAgent()
   });
 
   onDestroy(() => {
-    clearInterval(interval);
+    clearInterval(interval)
   });
 
 </script>
@@ -72,7 +75,11 @@
       {/each}
     </div>
     <div class="right-nav">
-      <div class="btn btn-primary btn-ghost">ACTIVEAGENT</div>
+      {#if selectedAgent}
+      <div class="btn btn-primary btn-ghost">{selectedAgent}</div>
+      {:else}
+      <div class="btn btn-error btn-ghost">No Agent Selected</div>
+      {/if}
       <div class="btn btn-primary btn-ghost">{utcTime} UTC</div>
     </div>
   </div>
@@ -85,9 +92,9 @@
   .main {
     height: calc(100vh - 150px);
     flex: 1;
-    padding: 20px;
+    padding-top: 20px;
     margin-top: 20px;
-    border: 1px solid rgb(163, 171, 186, 0.5);
+    border-top: 1px solid rgb(163, 171, 186, 0.5);
   }
   .screen {
     margin: 0 auto;
