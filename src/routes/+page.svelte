@@ -6,7 +6,7 @@
 
   import { onMount, onDestroy } from "svelte"
   import { tick } from "svelte/internal"
-  import { getSelectedAgent } from "$lib/store"
+  import { selectedAgent } from "$lib/store"
 
   const screenList = [
     { name: "Agents", component: AgentMain },
@@ -18,7 +18,6 @@
   let selected = AgentMain
   let utcTime = ""
   let interval
-  let selectedAgent
 
   function updateUTCTime() {
     const now = new Date();
@@ -49,7 +48,6 @@
 
   onMount(() => {
     startTimeDisplay()
-    selectedAgent = getSelectedAgent()
   });
 
   onDestroy(() => {
@@ -75,8 +73,8 @@
       {/each}
     </div>
     <div class="right-nav">
-      {#if selectedAgent}
-      <div class="btn btn-primary btn-ghost">{selectedAgent}</div>
+      {#if $selectedAgent}
+      <div class="btn btn-primary btn-ghost">{$selectedAgent}</div>
       {:else}
       <div class="btn btn-error btn-ghost">No Agent Selected</div>
       {/if}

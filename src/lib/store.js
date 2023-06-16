@@ -1,8 +1,29 @@
 import { writable } from 'svelte/store'
 
-
 // agentList setup and subscribe
-export function getAgentDetailsFromLocalStore() {
+const agentListObject = getAgentDetailsFromLocalStore()
+export const agentList = writable(agentListObject)
+
+agentList.subscribe(  
+  (value) => window.localStorage.setItem(
+  "agents", JSON.stringify(value)
+))
+
+// selectedAgent setup and subscribe
+export const selectedAgent = writable(
+  JSON.parse(
+    window.localStorage.getItem("selectedAgent")
+  )
+)
+
+selectedAgent.subscribe(
+  (value) => window.localStorage.setItem(
+    "selectedAgent", JSON.stringify(value)
+  )
+)
+
+// function to initialise agent list in local storage
+export function getAgentDetailsFromLocalStore(){
   if (window.localStorage.getItem("agents") === null) {
     window.localStorage.setItem("agents", JSON.stringify([]))
     return []
@@ -14,23 +35,29 @@ export function getAgentDetailsFromLocalStore() {
   }
 }
 
-export const agentList = writable(
-  getAgentDetailsFromLocalStore()
-)
-
-agentList.subscribe(  
-  (value) => window.localStorage.setItem(
-  "agents", JSON.stringify(value)
-))
-
 // helper fnctions to update agentList
 export function saveAgentDetails(symbol, token) {
   agentList.update(list => {
     const agent = list.find(agent => agent.symbol === symbol)
     if (agent) {
       agent.token = token
-      return 
+    } else {
+      list.push({
+        symbol: symbol, 
+        token: token
+      })
     }
+    return list
+  })
+}
+
+export function deleteAgent(symbol) {
+  agentList.update(list => {
+    const agent = list.find(agent => agent.symbol === symbol)
+    if (agent) {
+      list = list.filter(agent => agent.symbol !== symbol)
+    }
+    return list
   })
 }
 
@@ -62,16 +89,3 @@ export function saveAgentDetails(symbol, token) {
 //   }
 // }
 
-
-
-export const selectedAgent = writable(
-  JSON.parse(
-    window.localStorage.getItem("selectedAgent")
-  )
-)
-
-selectedAgent.subscribe(
-  (value) => window.localStorage.setItem(
-    "selectedAgent", JSON.stringify(value)
-  )
-)
