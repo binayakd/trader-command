@@ -1,13 +1,22 @@
 <script>
+  import { selectedAgent, deleteAgent } from "$lib/store";
+  import { get } from 'svelte/store'
   import AgentList from "./AgentList.svelte";
+
+  let agentInFocus = get(selectedAgent)
 
 </script>
 
-<svelte:component this={AgentList} />
+<AgentList bind:agentInFocus={agentInFocus}/>
 <div class="sub-section terminal-card">
   <header>
     Agent Details
   </header>
+  <div>
+    {#if agentInFocus}
+    {agentInFocus.symbol}
+    {/if}
+  </div>
 </div>
 <div class="sub-section">
   <div class="terminal-card half-card">
